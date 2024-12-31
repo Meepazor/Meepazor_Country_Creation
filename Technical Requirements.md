@@ -7,5 +7,5 @@ Check these, especially if the script opens a window, then immediately closes it
 	- It will install PIL which is required to edit image files (for the flag stuff)
 	- Technical documentation of PIL can be found here: https://pillow.readthedocs.io/en/stable/, it is a very established Python extension
 	
-3) Your base game files are as expected and has not been edited
-	- This shouldn't need updating with every patch, but if you notice any bugs (particularly with states of the focus tree), verify integrity of your game files via Steam
+3) Your base game files are as expected and have not been edited
+	- This shouldn't need updating with every patch, but if you notice any bugs (particularly with states or the focus tree), verify integrity of your game files via Steam
