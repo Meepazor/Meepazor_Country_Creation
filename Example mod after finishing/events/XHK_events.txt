@@ -1,0 +1,5 @@
+#add_namespace = example
+
+#country_event = {}
+
+#news_event = {}

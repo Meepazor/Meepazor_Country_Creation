@@ -1,0 +1,10 @@
+XHK = {
+	male = {
+		names = { John Steve Greg }
+	}
+	female = {
+		names = { Jane Stevie Grace }
+	}
+	surnames = { Jonhson Stevensen Gregson }
+	callsigns = { }
+}

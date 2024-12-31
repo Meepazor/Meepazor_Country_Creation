@@ -1,0 +1,15 @@
+characters={
+	XHK_sir_mark_young = { 
+		name = XHK_sir_mark_young
+		portraits = {
+			civilian = {
+				large = GFX_portrait_XHK_sir_mark_young
+			}
+		}
+		country_leader = {
+			ideology = conservatism
+			expire = "1960.1.1.1"
+			id = -1
+		}
+	}
+}
