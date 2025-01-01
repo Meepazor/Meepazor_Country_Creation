@@ -21,6 +21,9 @@ def remove_last_line(file):
         for line in lines[:-1]:
             edit_file.writelines(line)
 
+def substring_after(string, delimiter):
+    return (string.partition(delimiter)[-1]).replace(' ','').replace('\n','')
+
 #stuff needed later on
 base_path = pathlib.Path(__file__).parent.resolve()
 mode_val = '99'
@@ -48,7 +51,7 @@ ideologies_sub = ['conservatism', 'marxism', 'gen_nazism', 'despotism']
 
 #option to create folders, keeps going until you actually answer y or n
 while not mode_val in available_modes:
-    mode_val = str(input("1 - Full Country Creation\n2 - Flag Resizing\n3 - Focus Tree Supplementor\n0 - Exit \nWhich mod would you like? "))
+    mode_val = str(input("1 - Full Country Creation\n2 - Flag Resizing\n3 - Focus Tree Supplementor\n0 - Exit \nWhich mode would you like? "))
 
 #various paths to folders needed
 path_array = ["common/country_tags","common/countries","common/characters","history/countries","history/units","localisation/english","gfx/flags/medium","gfx/flags/small","history/states"]
@@ -383,13 +386,13 @@ elif mode_val == '3':
     
     for line in focus_file_data:
         if tag_found_ind == False and options_array[0] in line:
-            tag_input = (line.partition("=")[-1]).replace(' ','').replace('\n','')
+            tag_input = substring_after(line, '=')
             tag_found_ind = True
         elif options_array[1] in line:
             if '{' in line:
                 a = 1
-            else:
-                ideas_array.append((line.partition("=")[-1]).replace(' ','').replace('\n',''))
+            elif substring_after(line, '=') not in ideas_array:
+                ideas_array.append(substring_after(line, '='))
     
     if os.path.exists("saved_additions_"+mod_name+".txt"):
         with open("saved_additions_"+mod_name+".txt", "r") as save_file:
@@ -433,6 +436,7 @@ elif mode_val == '3':
                 else:
                     idea_proper = idea.replace('_',' ').title()
                 localisation_file.write('\n '+idea+': "'+idea_proper+'"')
+                localisation_file.write('\n '+idea+'_desc: "'+idea_proper+' Description"')
         
         if not os.path.exists("saved_additions_"+mod_name+".txt"):
             save_file = open("saved_additions_"+mod_name+".txt", "w")
@@ -440,15 +444,16 @@ elif mode_val == '3':
                  
         with open("saved_additions_"+mod_name+".txt", "r") as save_file:
             first_char = save_file.read(1)
-                 
+        
+        print("\n")
         with open("saved_additions_"+mod_name+".txt", "a") as save_file:    
             if not first_char:
                 save_file.write("#Additions already made by the tool for the mod: "+mod_name+"\n#This avoids duplication so don't remove this or any lines from it!")
             for idea in ideas_array:
-                print("Added idea: "+idea+" to '"+tag_input+"_ideas.txt' and '"+tag_input+"_l_english.yml'")
+                print("Added idea "+idea+" to '"+tag_input+"_ideas.txt' and '"+tag_input+"_l_english.yml'")
                 save_file.write("\nIDEA:"+idea)
 
-close = input("Done? ")
+close = input("\nDone? ")
 
 
 

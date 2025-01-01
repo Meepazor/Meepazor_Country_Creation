@@ -1,0 +1,19 @@
+#Additions already made by the tool for the mod: testmod
+#This avoids duplication so don't remove this or any lines from it!
+IDEA:XHK_new_idea
+IDEA:XHK_new_idea_7
+IDEA:special_forces
+IDEA:generic_secret_weapons_ns
+IDEA:liberty_ethos_focus
+IDEA:militarism_focus
+IDEA:idea_political_correctness
+IDEA:neutrality_idea
+IDEA:military_youth_focus
+IDEA:deterrence
+IDEA:volunteer_corps_focus
+IDEA:paramilitarism_focus
+IDEA:indoctrination_focus
+IDEA:foreign_expeditions_focus
+IDEA:why_we_fight_focus
+IDEA:political_commissars_focus
+IDEA:ideological_fanaticism_focus
