@@ -26,7 +26,7 @@ def substring_after(string, delimiter):
 
 def find_mod_folder():
     global mod_folder_location, base_path
-    if not os.path.exists(os.path.dirname(base_path)+"common"):
+    if not os.path.exists(str(base_path)+"/common"):
         tkinter.Tk().withdraw()
         mod_folder_location = os.path.dirname(filedialog.askdirectory(initialdir = "/",title = "Select the common folder from the your mod"))
     else:
@@ -34,19 +34,19 @@ def find_mod_folder():
 
 def find_mod_file(file_path, initial_text, delete_last_num=False):
     
-    os.makedirs(os.path.dirname(mod_folder_location+file_path),exist_ok=True)
-    if os.path.exists(mod_folder_location+file_path):
-        with open(mod_folder_location+file_path, "r") as file:
+    os.makedirs(os.path.dirname(str(mod_folder_location)+file_path),exist_ok=True)
+    if os.path.exists(str(mod_folder_location)+file_path):
+        with open(str(mod_folder_location)+file_path, "r") as file:
             first = file.read(1)
         
-        with open(mod_folder_location+file_path, "a") as file:
+        with open(str(mod_folder_location)+file_path, "a") as file:
             if not first:
                 file.write(initial_text)
             else:
                 file.write("\n")
                 if not delete_last_num == False:
                     for x in range(0,delete_last_num):
-                        remove_last_line(mod_folder_location+file_path)
+                        remove_last_line(str(mod_folder_location)+file_path)
 
 def read_without_comments(file, comments=0):
     with open(file,'r') as file_read:
@@ -70,12 +70,12 @@ def create_character(tag_input, character_input, ideology_input):
     else:
         ideology_tag = ideology_input
         
-    with open(mod_folder_location+'/common/characters/'+tag_input+'_characters.txt', "a") as character_file:
+    with open(str(mod_folder_location)+'/common/characters/'+tag_input+'_characters.txt', "a") as character_file:
         character_file.write('\t'+character_input_tag+' = { \n\t\tname = '+character_input_tag+'\n\t\tportraits = {\n\t\t\tcivilian = {\n\t\t\t\tlarge = GFX_portrait_'+character_input_tag+'\n\t\t\t}\n\t\t}\n\t\tcountry_leader = {\n\t\t\tideology = '+ideology_tag+'\n\t\t\texpire = "1960.1.1.1"\n\t\t\tid = -1\n\t\t}\n\t}\n}')
     
-    for files in os.listdir(mod_folder_location+'/history/countries'):
+    for files in os.listdir(str(mod_folder_location)+'/history/countries'):
         if (os.path.basename(files))[:3] == tag_input:
-            history_folder_location = mod_folder_location+'/history/countries/'+files
+            history_folder_location = str(mod_folder_location)+'/history/countries/'+files
     
     with open(history_folder_location, "r") as history_file:
         history_file_data = history_file.read()
@@ -83,7 +83,7 @@ def create_character(tag_input, character_input, ideology_input):
     with open(history_folder_location, "w") as history_file:
         history_file.write(history_file_data)
     
-    with open(mod_folder_location+'/localisation/english/'+tag_input+'_l_english.yml', "a") as loc_file:
+    with open(str(mod_folder_location)+'/localisation/english/'+tag_input+'_l_english.yml', "a") as loc_file:
         loc_file.write('\n '+character_input_tag+': "'+character_input+'"\n '+character_input_tag+'_desc: "'+character_input+' Description"')
 
 #stuff needed later on
