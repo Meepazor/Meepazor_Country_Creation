@@ -1,0 +1,6 @@
+####TAG;NAME;IDEOLOGY
+####Ideology can be f,d,c,n,fascism,democratic,communism,neutrality, or any other word where it will be assumed it's a sub-ideology
+####TAG must already exist in your mod
+XHK;Jon Wong;fascism
+XHK;Jim Davidson;d
+XHK;Paul Donaldson;anarchism
