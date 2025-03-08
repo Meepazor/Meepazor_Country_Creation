@@ -600,7 +600,28 @@ def major_function(mode_val):
             with open(map_folder_location+'/'+files, "w") as map_file:
                 for line in lines_array:
                     map_file.write(line)
-                        
+                
+    elif mode_val == '7':
+        
+        map_folder_location = filedialog.askdirectory(initialdir = "/",title = "Select the map folder from your mod")
+        with open(map_folder_location+'/adjacencies.csv', 'r') as csv_file:
+            csv_file_lines = csv_file.readlines()
+        
+        for num, line in enumerate(csv_file_lines,1):
+            with open('base_adjacency.txt', "r") as base_file:
+                base_file_data = base_file.read()
+            if num > 1:
+                csv_info = line.split(';')
+                if not csv_info[0] == '-1':
+                    print('Added ' + csv_info[8])
+                    base_file_data = base_file_data.replace('NAME_REPLACE', csv_info[8])
+                    base_file_data = base_file_data.replace('ID1', csv_info[0])
+                    base_file_data = base_file_data.replace('ID2', csv_info[1])
+                    base_file_data = base_file_data.replace('ID3', csv_info[3])
+            
+                    with open(map_folder_location+'/adjacency_rules.txt', 'a') as txt_file:
+                        txt_file.write('\n'+base_file_data)
+            
         
     #close = input("\nDone? ")
     
@@ -625,11 +646,11 @@ def major_function(mode_val):
 # =============================================================================
 
 mode_val = '99'
-available_modes = ['0','1','2','3','4','5','6']
+available_modes = ['0','1','2','3','4','5','6','7']
 
 #option to create folders, keeps going until you actually answer y or n
 while not mode_val in available_modes:
-    mode_val = str(input("1 - Full Country Creation\n2 - Flag Resizing\n3 - Focus Tree Supplementor\n4 - Character Creator\n5 - Victory Points -> Supply Nodes\n6 - Overlapping Temperature Fix\n0 - Exit \nWhich mode would you like? "))
+    mode_val = str(input("1 - Full Country Creation\n2 - Flag Resizing\n3 - Focus Tree Supplementor\n4 - Character Creator\n5 - Victory Points -> Supply Nodes\n6 - Overlapping Temperature Fix\n7 - Adjacency CSV to TXT\n0 - Exit \nWhich mode would you like? "))
     major_function(mode_val)
 
 

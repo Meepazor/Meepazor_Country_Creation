@@ -1,0 +1,33 @@
+adjacency_rule ={
+	name = "NAME_REPLACE"
+
+	contested ={
+		army = no
+		navy = no
+		submarine = yes
+		trade = no
+	}
+	enemy ={
+		army = no
+		navy = no
+		submarine = yes
+		trade = no
+	}
+	friend ={
+		army = yes
+		navy = yes
+		submarine = yes
+		trade = yes
+	}
+	neutral ={
+		army = yes
+		navy = yes
+		submarine = yes
+		trade = yes
+	}
+	
+	required_provinces = { ID1 ID2 }
+	
+	icon = ID3
+	offset = { -2 0 -7 }
+}
