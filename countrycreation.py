@@ -577,6 +577,30 @@ def major_function(mode_val):
         with open(map_folder_location+'/supply_nodes_temp.txt', 'a') as supply_node_file:
             for victory_point in victory_points:
                 supply_node_file.write('1 '+victory_point+'\n')
+                
+    elif mode_val == '6':
+        
+        map_folder_location = filedialog.askdirectory(initialdir = "/",title = "Select the map/strategic regions folder from your mod")
+        
+        for files in os.listdir(map_folder_location):
+            lines_array = []
+            indicator = 0
+            with open(map_folder_location+'/'+files, "r") as map_file:
+                lines = map_file.readlines()
+                for num, line in enumerate(lines,1):
+                    if '0.0 0.0' in line:
+                        zero_start = num - 1
+                        zero_end = num + 11
+                    if '4.11 21.11' in line:
+                        four_start = num - 1
+                        four_end = num + 11
+                for num, line in enumerate(lines,1):
+                    if not (zero_start <= num <= zero_end or four_start <= num <= four_end):
+                        lines_array.append(line)
+            with open(map_folder_location+'/'+files, "w") as map_file:
+                for line in lines_array:
+                    map_file.write(line)
+                        
         
     #close = input("\nDone? ")
     
@@ -601,11 +625,11 @@ def major_function(mode_val):
 # =============================================================================
 
 mode_val = '99'
-available_modes = ['0','1','2','3','4','5']
+available_modes = ['0','1','2','3','4','5','6']
 
 #option to create folders, keeps going until you actually answer y or n
 while not mode_val in available_modes:
-    mode_val = str(input("1 - Full Country Creation\n2 - Flag Resizing\n3 - Focus Tree Supplementor\n4 - Character Creator\n5 - Victory Points -> Supply Nodes\n0 - Exit \nWhich mode would you like? "))
+    mode_val = str(input("1 - Full Country Creation\n2 - Flag Resizing\n3 - Focus Tree Supplementor\n4 - Character Creator\n5 - Victory Points -> Supply Nodes\n6 - Overlapping Temperature Fix\n0 - Exit \nWhich mode would you like? "))
     major_function(mode_val)
 
 
