@@ -670,8 +670,10 @@ def major_function(mode_val):
             
             for line in error_file_lines:
                 if 'has_idea: ' in line:
-                    print(substring_after(line, 'has_idea: '))
                     idea_array.append(substring_after(line, 'has_idea: ').split('isnotAvalidIdea')[0])
+                if 'Invalid idea' in line:
+                    print(substring_after(line, 'Invalid idea: '))
+                    idea_array.append(substring_after(line, 'Invalid idea: ').split('.Ifyouwantedtoreference')[0].split(':ideas')[0])
             
             if idea_array:
                 idea_array = remove_duplicates(idea_array)
