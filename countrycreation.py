@@ -7,6 +7,7 @@ from tkinter import filedialog
 from PIL import Image
 import shutil
 import re
+import subprocess
 
 #makes sure the sort is in state number order
 def sort_nicely(l):
@@ -595,6 +596,10 @@ def major_function(mode_val):
             indicator = 0
             with open(map_folder_location+'/'+files, "r") as map_file:
                 lines = map_file.readlines()
+                zero_start = -1
+                zero_end = -1
+                four_start = -1
+                four_end = -1
                 for num, line in enumerate(lines,1):
                     if '0.0 0.0' in line:
                         zero_start = num - 1
@@ -686,8 +691,50 @@ def major_function(mode_val):
                             base_idea_data = base_idea_data.replace('IDEA_ID', idea)
                             idea_file.write('\n'+base_idea_data)
                     idea_file.write('\n\t}\n}')
-                    
+    
+    elif mode_val == '10':
+    
+        history_folder_location = filedialog.askdirectory(initialdir = "/",title = "Select the history folder from your mod")
+        log_folder_location = folder_up(common_folder_location, 3, 'logs')
+        tag_array = []
+    
+        with open(log_folder_location+'/error.log', 'r') as error_file:
+            error_file_lines = error_file.readlines()
             
+            for line in error_file_lines:
+                if 'is missing a history file' in line:
+                    tag_array.append(substring_after(line, ']: ').split('-ismissing')[0])
+                
+            if tag_array:
+                tag_array = remove_duplicates(tag_array)
+                
+                for tag in tag_array:
+                    with open(history_folder_location+'/countries/'+tag+' - Invalid Nation.txt', 'w') as history_file:
+                        history_file.write('capital = 1')
+    
+    elif mode_val == '11':
+    
+        common_folder_location = filedialog.askdirectory(initialdir = "/",title = "Select the common folder from your mod")
+        log_folder_location = folder_up(common_folder_location, 4, 'logs')
+        trigger_array = []
+    
+        with open(log_folder_location+'/error.log', 'r') as error_file:
+            error_file_lines = error_file.readlines()
+            
+            with open(common_folder_location+'/scripted_triggers/error_triggers.txt', 'a') as trigger_file:
+                for line in error_file_lines:
+                    if 'Unknown trigger-type' in line:
+                        trigger_array.append(substring_after(line, 'Error: "Unknown trigger-type: ').split(',nearline')[0])
+                    if "Invalid trigger '" in line:
+                        trigger_array.append(substring_after(line, "Invalid trigger '").split("'in")[0])
+                
+                if trigger_array:
+                    trigger_array = remove_duplicates(trigger_array)
+                
+                for trigger in trigger_array:
+                    trigger_file.write(trigger +' = {\n\talways = no\n}\n')
+        
+        print('Check common/scripted_triggers/error_triggers.txt for any valid errors it found, i.e. "limit" or "="')
         
     #close = input("\nDone? ")
     
@@ -712,11 +759,11 @@ def major_function(mode_val):
 # =============================================================================
 
 mode_val = '99'
-available_modes = ['0','1','2','3','4','5','6','7','8','9']
+available_modes = ['0','1','2','3','4','5','6','7','8','9','10','11']
 
 #option to create folders, keeps going until you actually answer y or n
 while not mode_val in available_modes:
-    mode_val = str(input("1 - Full Country Creation\n2 - Flag Resizing\n3 - Focus Tree Supplementor\n4 - Character Creator\n5 - Victory Points -> Supply Nodes\n6 - Overlapping Temperature Fix\n7 - Adjacency CSV to TXT\n8 - Missing Focus Errors\n9 - Missing Idea Errors\n0 - Exit \nWhich mode would you like? "))
+    mode_val = str(input("1 - Full Country Creation\n2 - Flag Resizing\n3 - Focus Tree Supplementor\n4 - Character Creator\n5 - Victory Points -> Supply Nodes\n6 - Overlapping Temperature Fix\n7 - Adjacency CSV to TXT\n8 - Missing Focus Errors\n9 - Missing Idea Errors\n10 - Missing History Errors\n11 - Missing Trigger Ideas\n0 - Exit \nWhich mode would you like? "))
     major_function(mode_val)
 
 
