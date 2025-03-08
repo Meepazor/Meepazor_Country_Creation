@@ -1,0 +1,9 @@
+	focus = {
+		id = FOCUS_ID
+		icon = GFX_goal_generic_allies_build_infantry
+		x = 1
+		y = 0
+		cost = 10
+		available_if_capitulated = yes
+		completion_reward = {}
+	}

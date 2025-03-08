@@ -55,6 +55,14 @@ def read_without_comments(file, comments=0):
     print(array)
     return array
             
+def folder_up(folder, num=1, new_path=''):
+    for i in range(1, num):
+        folder = os.path.dirname(folder)
+    return folder + '/' + new_path
+
+def remove_duplicates(x):
+  return list(dict.fromkeys(x))
+
 def create_character(tag_input, character_input, ideology_input):
     global ideologies, ideologies_sub, ideologies_full, mod_folder_location, history_folder_location
     
@@ -621,7 +629,34 @@ def major_function(mode_val):
             
                     with open(map_folder_location+'/adjacency_rules.txt', 'a') as txt_file:
                         txt_file.write('\n'+base_file_data)
+    
+    elif mode_val == '8':
+       
+        common_folder_location = filedialog.askdirectory(initialdir = "/",title = "Select the common folder from your mod")
+        log_folder_location = folder_up(common_folder_location, 4, 'logs')
+        focus_array = []
+        
+        with open(log_folder_location+'/error.log', 'r') as error_file:
+            error_file_lines = error_file.readlines()
+            for line in error_file_lines:
+                if 'has_completed_focus = ' in line:
+                    print(line)
+                    focus_array.append(substring_after(line, 'has_completed_focus = ').split('(')[0])
             
+            if focus_array:
+                focus_array = remove_duplicates(focus_array)
+                
+                with open('base_tree.txt', 'r') as base_tree:
+                    base_tree_data = base_tree.read()
+                
+                with open(common_folder_location+'/national_focus/error_focus.txt', 'w') as focus_file:
+                    focus_file.write(base_tree_data)
+                    for focus in focus_array:
+                        with open('base_focus.txt', 'r') as base_focus:
+                            base_focus_data = base_focus.read()
+                            base_focus_data = base_focus_data.replace('FOCUS_ID', focus)
+                            focus_file.write('\n'+base_focus_data)
+                    focus_file.write('\n}')
         
     #close = input("\nDone? ")
     
@@ -646,11 +681,11 @@ def major_function(mode_val):
 # =============================================================================
 
 mode_val = '99'
-available_modes = ['0','1','2','3','4','5','6','7']
+available_modes = ['0','1','2','3','4','5','6','7','8']
 
 #option to create folders, keeps going until you actually answer y or n
 while not mode_val in available_modes:
-    mode_val = str(input("1 - Full Country Creation\n2 - Flag Resizing\n3 - Focus Tree Supplementor\n4 - Character Creator\n5 - Victory Points -> Supply Nodes\n6 - Overlapping Temperature Fix\n7 - Adjacency CSV to TXT\n0 - Exit \nWhich mode would you like? "))
+    mode_val = str(input("1 - Full Country Creation\n2 - Flag Resizing\n3 - Focus Tree Supplementor\n4 - Character Creator\n5 - Victory Points -> Supply Nodes\n6 - Overlapping Temperature Fix\n7 - Adjacency CSV to TXT\n8 - Has Completed Focus Error Fix\n0 - Exit \nWhich mode would you like? "))
     major_function(mode_val)
 
 
