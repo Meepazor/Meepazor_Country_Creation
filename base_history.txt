@@ -1,0 +1,39 @@
+﻿capital = CAPITAL_NO
+
+oob = "MYTAG_1936"
+
+set_research_slots = 3
+
+set_technology = {
+	infantry_weapons = 1
+	tech_support = 1
+	field_gun = 1
+	basic_train = 1
+	artillery1 = 1
+}
+
+add_ideas = {
+	export_focus
+	volunteer_only
+	civilian_economy
+}
+
+set_convoys = 50
+set_train_equipment = yes
+set_motorized_equipment = yes
+
+#recruit_character =
+
+set_politics = {
+	ruling_party = MAIN_IDEOLOGY
+	last_election = "1936.1.1"
+	election_frequency = 48
+	elections_allowed = no
+}
+
+set_popularities = {
+	MAIN_IDEOLOGY = 70
+	OTHER_IDEOLOGY1 = 10
+	OTHER_IDEOLOGY2 = 10
+	OTHER_IDEOLOGY3 = 10
+}

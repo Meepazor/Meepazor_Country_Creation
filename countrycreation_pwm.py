@@ -383,8 +383,8 @@ def major_function(mode_val):
                         #shutil.copyfile(history_folder_location+'/'+state_file_array[state_num], mod_folder_location + '/history/states/'+state_file_array[state_num])
                         with open(mod_folder_location+'/history/states/'+state_file_array[state_num], "r") as state_file:
                             state_file_data = state_file.read()
-                            state_file_data = state_file_data.replace('owner = ', 'owner = '+tag_input+' #')
-                            state_file_data = state_file_data.replace('add_core_of = ', 'add_core_of = '+tag_input+' #',1)
+                            state_file_data = state_file_data.replace('#owner = ', 'owner = '+tag_input+' #')
+                            state_file_data = state_file_data.replace('#add_core_of = ', 'add_core_of = '+tag_input+' #',1)
                         with open(mod_folder_location+'/history/states/'+state_file_array[state_num], "w") as state_file:  
                             state_file.write(state_file_data)                            
                     
