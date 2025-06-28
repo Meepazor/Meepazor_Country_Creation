@@ -1,0 +1,3 @@
+####TAG;BASE_MIO_NAME;NEW_MIO_NAME
+####TAG must always be a specific country's tag (it will not check if tag exists in mod)
+####NEW_MIO_NAME must be the actual name, not the key (ie Small Arms Company not small_arms_company)

@@ -53,7 +53,7 @@ def read_without_comments(file, comments=0):
     with open(file,'r') as file_read:
         array = file_read.readlines()
     array = array[comments:]
-    print(array)
+    #print(array)
     return array
             
 def folder_up(folder, num=1, new_path=''):
@@ -601,6 +601,7 @@ def major_function(mode_val):
                     if 'victory_points = {' in line:
                         indicator = 1
         
+        sort_nicely(victory_points)
         map_folder_location = os.path.dirname(states_folder_location)+'/map' 
         
         with open(map_folder_location+'/supply_nodes_temp.txt', 'a') as supply_node_file:
@@ -755,6 +756,153 @@ def major_function(mode_val):
                     trigger_file.write(trigger +' = {\n\talways = no\n}\n')
         
         print('Check common/scripted_triggers/error_triggers.txt for any valid errors it found, i.e. "limit" or "="')
+    
+    elif mode_val == '12':
+    
+        flag_input = filedialog.askopenfilename(initialdir = "/",title = "Select a large flag to use from the gfx/flags folder")
+        flag_name = (os.path.basename(flag_input))
+        flag_folder_location = os.path.dirname(flag_input)
+        medium_flag_location = flag_folder_location + '/medium/' + flag_name
+        small_flag_location = flag_folder_location + '/small/' + flag_name
+        
+        log_folder_location = folder_up(flag_folder_location, 5, 'logs')
+        flags_array = []
+    
+        with open(log_folder_location+'/error.log', 'r') as error_file:
+            error_file_lines = error_file.readlines()
+            
+            for line in error_file_lines:
+                if 'File not found' in line and 'Error loading flag for country' in line:
+                    flags_array.append(substring_after(line, 'Error loading flag for country ').split(':Ideology')[0])
+                
+            if flags_array:
+                flags_array = remove_duplicates(flags_array)
+                
+            for country in flags_array:
+                shutil.copyfile(flag_input, flag_folder_location + '/' + country + '.tga')
+                shutil.copyfile(medium_flag_location, flag_folder_location + '/medium/' + country + '.tga')
+                shutil.copyfile(small_flag_location, flag_folder_location + '/small/' + country + '.tga')
+    
+    elif mode_val == '13':
+    
+        base_input = filedialog.askopenfilename(initialdir = '/',title = 'Select your base MIO file from your mod',filetypes = (("Text files","*.txt*"),('All files', '*.*')))
+        mio_folder_location = os.path.dirname(base_input)
+        loc_folder_location = folder_up(mio_folder_location, 4, 'localisation/english')
+        
+        file_input = filedialog.askopenfilename(initialdir = '/',title = 'Select your MIO naming file',filetypes = (("Text files","*.txt*"),('All files', '*.*')))
+        mios = read_without_comments(file_input, 3)
+        
+        with open(base_input, 'r') as base_file:
+            base_input_data = base_file.read()
+        with open(base_input, 'r') as base_file:
+            base_input_lines = base_file.readlines()
+        
+        with open(loc_folder_location+'/'+'auto_mio_names_l_english.yml', 'w', encoding='utf-8-sig') as loc_file:
+            print('Created localisation file')
+        
+        with open(loc_folder_location+'/'+'auto_mio_names_l_english.yml', 'r+', encoding='utf-8-sig') as loc_file:
+            first_char = loc_file.read(1)
+            if not first_char:
+                loc_file.write('l_english:\n')
+        
+        with open(mio_folder_location+'/'+'00_auto_mios.txt', 'w'):
+            print('Created mio file')
+        
+        for mio in mios:
+            i = -1
+            mio_info = mio.split(';')
+            
+            if mio_info[1] in base_input_data:
+                
+                mio_condition = mio_info[0]
+                
+                if len(mio_condition)==3 and mio_condition[0:1].isalpha():
+                    mio_trigger = 'tag = ' + mio_condition
+                
+                    for number, line in enumerate(base_input_lines):
+                        if mio_info[1] in line:
+                            
+                            for icon_line in base_input_lines[number:]:
+                                if 'icon' in icon_line:
+                                    mio_icon = icon_line.split('= ')[1].replace('\n','')
+                                    break
+                            
+                            for allowed_line in base_input_lines[number:]:
+                                i = i + 1
+                                if 'allowed' in allowed_line:
+                                    line_num = number + i
+                                    base_allowed_trigger = allowed_line.replace('allowed = {', 'allowed = { \n\t\tNOT = { ' + mio_trigger + '}')
+                                    base_input_lines[line_num] = base_allowed_trigger
+                                    break
+                            
+                            break
+                    
+                    mio_info[2] = mio_info[2].replace("'", "").replace('"', '').replace('\n','')
+                    mio_loc_key = mio_condition + '_mio_' + mio_info[2].lower().replace(' ', '_')
+                    mio_loc = mio_loc_key + ': "' + mio_info[2] + '"'
+                    
+                    with open(loc_folder_location+'/'+'auto_mio_names_l_english.yml', 'a', encoding='utf-8-sig') as loc_file:
+                        loc_file.write(' ' + mio_loc + '\n')
+                    
+                    with open('base_mio.txt', "r") as base_mio_file:
+                        base_file_data = base_mio_file.read()
+                        base_file_data = base_file_data.replace('MIO_NAME', mio_loc_key)
+                        base_file_data = base_file_data.replace('BASE_MIO', mio_info[1])
+                        base_file_data = base_file_data.replace('MIO_ICON', mio_icon)
+                        base_file_data = base_file_data.replace('MIO_TRIGGER', mio_trigger)
+                    
+                    with open(mio_folder_location+'/'+'00_auto_mios.txt', 'a') as mio_file:
+                        mio_file.write('\n'+base_file_data+'\n')
+                    
+                    with open(base_input, 'w') as base_mio_file:
+                        base_mio_file.writelines(base_input_lines)
+                    
+                else:
+                    print('MIO condition ' + mio_condition + ' for ' + mio_info[2] + ' is invalid.')
+                
+            else:
+                print('Failed to add ' + mio_info[2].replace('\n','') + ' due to missing base mio: ' + mio_info[1])
+                
+    elif mode_val == '14':
+        
+        states_folder_location = filedialog.askdirectory(initialdir = "/",title = "Select the history folder from your mod")
+        victory_points = []
+        indicator = 0
+        owner_indicator = 0
+        
+        for files in os.listdir(states_folder_location+'/states'):
+            with open(states_folder_location+'/states/'+files, "r") as state_file:
+                lines = state_file.readlines()
+                for line in lines:
+                    if owner_indicator == 0 and 'owner' in line:
+                        owner_tag = line.split('=')[1].replace('\t', '').replace(' ','').replace('\n','')
+                        owner_indicator = 1
+                for line in lines:
+                    if indicator == 1 and owner_indicator == 0:
+                        victory_points.append((line.split(' ')[0].replace('\t', ''))+';'+str(files.split('-')[0])+';UNOWNED')
+                        indicator = 0
+                    elif indicator == 1:
+                        victory_points.append((line.split(' ')[0].replace('\t', ''))+';'+str(files.split('-')[0])+';'+owner_tag)
+                        indicator = 0
+                    elif 'victory_points = {' in line:
+                        indicator = 1
+                owner_indicator = 0
+        
+        sort_nicely(victory_points)
+        localisation_folder_location = os.path.dirname(states_folder_location)+'/localisation/english' 
+        
+        with open(localisation_folder_location+'/'+'victory_points_l_english.yml', 'r') as orig_file:
+            orig_file_data = orig_file.read()
+            for victory_point in victory_points:
+                if 'VICTORY_POINTS_'+victory_point.split(';')[0] in orig_file_data:
+                    victory_points.remove(victory_point)
+        
+        with open(localisation_folder_location+'/'+'auto_victory_points_l_english.yml', 'a', encoding='utf-8-sig') as loc_file:
+            loc_file.write('l_english:\n')
+            for victory_point in victory_points:
+                loc_file.write(' #VICTORY_POINTS_'+victory_point.split(';')[0]+': "" #STATE_'+victory_point.split(';')[1]+' - owned by '+victory_point.split(';')[2]+'\n')
+                
+            
         
     #close = input("\nDone? ")
     
@@ -779,11 +927,11 @@ def major_function(mode_val):
 # =============================================================================
 
 mode_val = '99'
-available_modes = ['0','1','2','3','4','5','6','7','8','9','10','11']
+available_modes = ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14']
 
 #option to create folders, keeps going until you actually answer y or n
 while not mode_val in available_modes:
-    mode_val = str(input("1 - Full Country Creation\n2 - Flag Resizing\n3 - Focus Tree Supplementor\n4 - Character Creator\n5 - Victory Points -> Supply Nodes\n6 - Overlapping Temperature Fix\n7 - Adjacency CSV to TXT\n8 - Missing Focus Errors\n9 - Missing Idea Errors\n10 - Missing History Errors\n11 - Missing Trigger Ideas\n0 - Exit \nWhich mode would you like? "))
+    mode_val = str(input("1 - Full Country Creation\n2 - Flag Resizing\n3 - Focus Tree Supplementor\n4 - Character Creator\n5 - Victory Points -> Supply Nodes\n6 - Overlapping Temperature Fix\n7 - Adjacency CSV to TXT\n8 - Missing Focus Errors\n9 - Missing Idea Errors\n10 - Missing History Errors\n11 - Missing Trigger Ideas\n12 - Missing Flags\n13 - MIO Custom Names\n14 - Victory Point Localisation\n0 - Exit \nWhich mode would you like? "))
     major_function(mode_val)
 
 

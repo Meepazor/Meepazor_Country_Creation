@@ -1,0 +1,8 @@
+MIO_NAME = {
+	name = MIO_NAME
+	icon = MIO_ICON
+	include = BASE_MIO
+	allowed = {
+		MIO_TRIGGER
+	}
+}
