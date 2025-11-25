@@ -1,0 +1,4 @@
+title,cost,x,y,prerequisite,mutual
+Airforce Modernization,7,5,0,-1,-1
+Doctrine of Annihilation,7,-3,2,1,3
+Doctrine of Support,7,0,2,1,2

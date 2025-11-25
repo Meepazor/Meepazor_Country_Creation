@@ -1,0 +1,15 @@
+focus_tree = {
+	id = error_focus
+	
+	country = {
+		factor = 0
+		modifier = {
+			factor = 0
+			always = yes
+		}
+	}
+	
+	default = no
+	
+	continuous_focus_position = { x = 50 y = 2000 }
+
